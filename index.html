@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #mainbox{
+            display: flex;
+            border: 1px solid blue;
+        }
+        #right_box{
+            margin-left: 400px;
+            /* background-color: black; */
+        }
+
+        #day7{
+            display: grid;
+            grid-template-columns: repeat(7,1fr);
+            grid-template-rows: auto;
+            background-color: teal;
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+            text-align: center;
+            gap: 20px
+            ;
+            /* border-radius: 30px; */
+
+
+        }
+        #day7>div{
+            background-color: pink;
+        }
+
+    </style>
+    
+</head>
+<body>
+    <button onclick="getWeather()">Get Weather on loaction</button>
+    <input type="text" id="city">
+    <button onclick ="getCity()"> show temp</button>
+    <div id="mainbox">
+    <div id="box">
+        <!-- show data  -->
+    </div>
+    <div id="right_box" class="mapouter"><div class="gmap_canvas"><iframe width="600" height="500" id="gmap_canvas"frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a href="https://fmovies-online.net">fmovies</a><br><style>.mapouter{position:relative;text-align:right;height:500px;width:600px;}</style><a href="https://www.embedgooglemap.net">embedgooglemap.net</a><style>.gmap_canvas {overflow:hidden;background:none!important;height:500px;width:600px;}</style></div></div>
+</div>
+<!--  7 days wether forcast -->
+<button onclick="day7Wether()">Show last 7 day data</button>
+<div id="day7"></div>
+</body>
+</html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+    integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    // src="https://maps.google.com/maps?q=delhi&t=&z=13&ie=UTF8&iwloc=&output=embed"
+    //https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
+    // 0f8513fbc764697ffba6a91a231d7834  my key
+
+    //https://api.openweathermap.org/data/2.5/onecall?lat=33.44&lon=-94.04&exclude=hourly,daily&appid={API key} 7 day map key
+
+    getCity()
+    async function getCity(){
+     try{
+         city =  document.querySelector("#city").value;
+         var url =  `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=0f8513fbc764697ffba6a91a231d7834`
+
+         var request =  await fetch(url)
+         var citydata = await request.json()
+         console.log(citydata.coord.lat,citydata.coord.lon)
+
+         let ulr7day =`https://api.openweathermap.org/data/2.5/onecall?lat=${citydata.coord.lat}&lon=${citydata.coord.lon}&appid=0f8513fbc764697ffba6a91a231d7834`
+
+         var request7day = await fetch( ulr7day)
+         var citydata7day = await request7day.json()
+         console.log(citydata7day,"this is abhi 7 day data")
+         console.log(citydata,"citydata")
+        
+    append(citydata);
+    show7DayWether(citydata7day);
+     }catch(e){
+         console.log(e)
+     }
+
+    }
+
+    ///// show wether and map
+    function append(data){
+        // console.log(data,"inside function")
+        let box = document.querySelector("#box");
+        // let day7 = document.querySelector("#day7")
+        // day7.innerHTML = null
+       
+        let map = document.querySelector("#gmap_canvas")
+        box.innerHTML = null
+        let city = document.createElement("p")
+        city.innerText = `city:${data.name}`
+
+        let min = document.createElement("p")
+        min.innerText = `min temp${Math.floor(data.main.temp_min-273.15)}`
+        let max = document.createElement("p")
+        max.innerText = `max temp${Math.floor(data.main.temp_max-273.15) }`
+
+        let curruntTemp = document.createElement("p")
+        curruntTemp.innerText = `current temp${Math.floor(data.main.temp-273.15) }`
+
+        let humidity = document.createElement("p")
+        humidity.innerText = ` humanidity${data.main.humidity}`
+        box.append(city,min,max,curruntTemp,humidity)
+        // day7.append(city,min,max,curruntTemp,humidity)
+        map.src =` https://maps.google.com/maps?q=${data.name}&ie=UTF8&iwloc=&output=embed `
+       
+    }
+
+    
+    /// show 7 day data
+    var arr =  ["sunday","monday","tuesday","wensday","thursday","friday","sturday"]
+    function   show7DayWether(data7day){
+        console.log(data7day,"inside data 7")
+        document.querySelector("#day7").innerHTML = null;
+
+        data7day.daily.map(function(element,index){
+            if(index !==7){
+                var maindiv = document.createElement("div")
+                maindiv.setAttribute("id","main")
+                maindiv.style.border = "1px solid black"
+                var city_day = document.createElement("div")
+                city_day.setAttribute = ("id","cityday")
+                let wetherday = document.createElement("p")
+                wetherday.innerHTML = `${arr[index]}`
+                city_day.append(wetherday)
+            }
+
+   /// Tempureture Body
+let cityTemp = document.createElement("div")
+cityTemp.setAttribute("id","temp")
+let wetherTemp = document.createElement("h1")
+wetherTemp.innerHTML = `${ Math.floor(element.temp.day - 273.15) }&#x2103;`
+cityTemp.append(wetherTemp)
+
+// max - min Tempreture
+let cityMaxMinTemp = document.createElement("div")
+cityMaxMinTemp.setAttribute("id","max-min-temp")
+let wetherMaxMinTemp = document.createElement("p")
+wetherMaxMinTemp.innerHTML = `${element.temp.min}&#x2103 (Min)${element.temp.max}&#x2103 (Max) `
+cityMaxMinTemp.append(wetherMaxMinTemp)
+
+// weather_sunRice body
+let citySunRice = document.createElement("div")
+citySunRice.setAttribute("id","humanity")
+let weatherSunRice = document.createElement("p")
+weatherSunRice.innerHTML = `${window.moment((element.sunrise)*1000).format("HH:mm a")}`
+citySunRice.append(weatherSunRice)
+
+
+////weather_sunset body
+    let citySunSet = document.createElement("div")
+    citySunSet.setAttribute("id","humanity")
+    let wetherSunSet = document.createElement("p")
+    wetherSunSet.innerHTML = `${window.moment((element.sunset)*1000).format("HH:mm a")}`
+    citySunSet.append(wetherSunSet)
+
+    ////// cloud body and description
+
+    let cityCloud = document.createElement("div")
+    cityCloud.setAttribute("id","cloud")
+    let wetherCloud = document.createElement("p")
+    wetherCloud.innerHTML = `${element.weather[0].description}`
+  cityCloud.append(wetherCloud)
+
+  ////  // cloud logo 
+  let cityLogo =document.createElement("div")
+  cityLogo.setAttribute("id","logo")
+  let wetherLogo = document.createElement("img")
+  wetherLogo.src =  `http://openweathermap.org/img/w/${element.weather[0].icon}.png`
+  cityLogo.append(wetherLogo)
+
+  maindiv.append(city_day,cityTemp,cityMaxMinTemp,citySunRice,citySunSet,cityCloud, cityLogo)
+  document.querySelector("#day7").append(maindiv);
+        })
+
+
+
+    }
+
+    function getWeather(){
+        navigator.geolocation.getCurrentPosition(success)
+
+        function success(pos) {
+  var crd = pos.coords;
+
+  console.log('Your current position is:');
+  console.log(`Latitude : ${crd.latitude}`);
+  console.log(`Longitude: ${crd.longitude}`);
+  console.log(`More or less ${crd.accuracy} meters.`);
+  getCityLocation(crd.latitude,crd.longitude)
+  day7Wether(crd.latitude,crd.longitude)
+}
+
+    }
+   
+
+  
+
+
+
+</script>
