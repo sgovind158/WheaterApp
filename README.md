@@ -8,4 +8,7 @@ https://1wheaterapp.netlify.app/
 - HTML
 - CSS
 - JavaScript
-<img src="https://b.zmtcdn.com/data/pictures/7/19662987/cab2466aa5a389cd71de13daa3411ecd_o2_featured_v2.jpg">
+#
+ - <img src="./image/whether1.png" alt="">
+
+  <img src="./image/whether2.png" alt="">
