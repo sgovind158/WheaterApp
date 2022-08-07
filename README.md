@@ -8,7 +8,10 @@ https://1wheaterapp.netlify.app/
 - HTML
 - CSS
 - JavaScript
-#
- - <img src="./image/whether1.png" alt="">
 
- # <img src="./image/whether2.png" alt="">
+ #
+ <img src="./image/whether1.png" alt="">
+
+#
+ - <img src="https://github.com/sgovind158/WheaterApp/blob/main/image/whetther2.png?raw=true" alt="">
+
