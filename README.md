@@ -12,3 +12,6 @@ https://1wheaterapp.netlify.app/
  - <img src="./image/whether1.png" alt="">
 
  # <img src="./image/whether2.png" alt="">
+
+ ![index](./image/whether1.png)
+![responsive4](./image/whether2.png)
