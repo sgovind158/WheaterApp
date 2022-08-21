@@ -9,10 +9,19 @@
         #mainbox{
             display: flex;
             border: 1px solid blue;
+            background-color: beige;
         }
         #right_box{
-            margin-left: 400px;
+            margin-left: 300px;
             /* background-color: black; */
+        }
+
+        #box{
+            width: 50%;
+            font-size: 30px;
+            color: teal;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            text-align: center;
         }
 
         #day7{
@@ -31,13 +40,89 @@
         #day7>div{
             background-color: pink;
         }
+        button{
+            border: 2px solid teal;
+            background-color: blueviolet;
+            width: auto;
+            height: 40px;
+            border-radius: 20px;
+            font-size: 15px;
+        }
+
+        input{
+            width: auto;
+            height: 40px;
+            border-radius: 20px;
+            font-size: 15px;
+        }
+
+
+        @media screen and (min-width:340px) and (max-width : 480px) {
+
+            #mainbox{
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid blue;
+            gap: 30px;
+        }
+        #box{
+           margin-left: 50px;
+           margin-top: 30px;
+        }
+        #right_box{
+            width: 50%;
+            margin-left: -250px;
+            margin-top: 20px;
+            /* background-color: black; */
+        }
+
+        #day7{
+            width: 90%;
+            height: auto;
+            display: grid;
+            grid-template-columns: repeat(1,1fr);
+            grid-template-rows: auto;
+            background-color: rgba(0, 255, 219, 1);
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+            text-align: center;
+            gap: 20px
+            ;
+            /* border-radius: 30px; */
+
+
+        }
+        #day7>div{
+            
+            background-color: rgba(400, 255, 219, 1);
+        }
+   
+        button{
+            border: 2px solid teal;
+            /* background-color: blueviolet; */
+            width: auto;
+            height: 30px;
+            border-radius: 20px;
+            font-size: 15px;
+        }
+
+        input{
+            width: 130px;
+            height: 20px;
+            border-radius: 20px;
+            font-size: 15px;
+        }
+
+
+ 
+   }
 
     </style>
     
 </head>
 <body>
-    <button onclick="getWeather()">Get Weather on loaction</button>
-    <input type="text" id="city">
+    <button onclick="getWeather()">loaction</button>
+    <input type="text" id="city" placeholder="enter city name">
     <button onclick ="getCity()"> show temp</button>
     <div id="mainbox">
     <div id="box">
@@ -66,6 +151,32 @@
      try{
          city =  document.querySelector("#city").value;
          var url =  `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=0f8513fbc764697ffba6a91a231d7834`
+
+         var request =  await fetch(url)
+         var citydata = await request.json()
+         console.log(citydata.coord.lat,citydata.coord.lon)
+
+         let ulr7day =`https://api.openweathermap.org/data/2.5/onecall?lat=${citydata.coord.lat}&lon=${citydata.coord.lon}&appid=0f8513fbc764697ffba6a91a231d7834`
+
+         var request7day = await fetch( ulr7day)
+         var citydata7day = await request7day.json()
+         console.log(citydata7day,"this is abhi 7 day data")
+         console.log(citydata,"citydata")
+        
+    append(citydata);
+    show7DayWether(citydata7day);
+     }catch(e){
+         console.log(e)
+     }
+
+    }
+
+// rendome
+    rendomgetCity()
+    async function rendomgetCity(){
+     try{
+         city =  document.querySelector("#city").value;
+         var url =  `https://api.openweathermap.org/data/2.5/weather?q=indore&appid=0f8513fbc764697ffba6a91a231d7834`
 
          var request =  await fetch(url)
          var citydata = await request.json()
